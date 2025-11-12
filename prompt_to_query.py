@@ -61,6 +61,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("user", USER_TMPL) # 사용자의 실제 입력 + enum에 맞게 넣음 
 
 ])
+
 ### langchain ###
 # 여기 이해가 될랑말랑....
 

@@ -15,7 +15,6 @@ class QuerySchema(BaseModel):
     cost: Optional[int] = None                  # 참가비 상한(원)
     reward: Optional[int] = None                # 총상금 하한(원)
     eligibility: Optional[str] = None           # 참가 대상 : 자유 텍스트
-    keywords: Optional[str] = None              # FULLTEXT용 자유 키워드
 
     # team_info / role
     recruit_date: Optional[str] = None          # 이 날짜 "이전"에 모집이 마감: 경계값(YYYY-MM-DD)

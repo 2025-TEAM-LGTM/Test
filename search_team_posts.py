@@ -1,27 +1,32 @@
 # search_team_posts.py
-from typing import List, Tuple
-from db_connect import get_conn
+from typing import List, Tuple # 자료 구조 
+from db_connect import get_conn # db 연결 
 
+# 동적 sql 만들기 위한 함수
+# [] 형식에 있던 단어들만 빼내어 sql 쿼리에 넣을 수 있게 함!
 def _in_clause(placeholders: List[str]) -> str:
     return ", ".join(["%s"] * len(placeholders))
 
+# WHERE 절 생성하는 함수 
+# q : langchain이 생성한 json (queryschema)
 def build_team_where_clause(q: dict) -> Tuple[str, list]:
-    where = []
-    params = []
+    where = [] # sql 문자열 조건 모음 
+    params = [] # %s 자리에 들어갈 값 리스트 
 
     # --- team_info 기반 ---
     # 팀 모집 마감일: "11월 이전에 끝" → recruit_date < 2025-11-01
-    if q.get("recruit_date"):
-        where.append("ti.recruit_date < %s")
-        params.append(q["recruit_date"])
+    if q.get("recruit_date"): # q에서 recruit_date 파트만 빼옴 
+        where.append("ti.recruit_date <= %s") # where 조건 더하기 
+        params.append(q["recruit_date"]) # param  
 
     # 연락 수단
     if q.get("contact_type"):
-        where.append("ti.contact_type = %s")
+        where.append("ti.contact_type = %s") # 연락수단은 무조건 일치 
         params.append(q["contact_type"])
 
 
     # 필요한 역할 ANY 매칭 (백엔드 등)
+    # EXISTS 서브쿼리로 해당 팀이 그 역할을 포함하는지 체크한다. 
     if q.get("needed_roles"):
         roles = q["needed_roles"]
         where.append(f"EXISTS (SELECT 1 FROM role r2 WHERE r2.team_id = ti.team_id AND r2.needed_roles IN ({_in_clause(roles)}))")
@@ -57,7 +62,10 @@ def build_team_where_clause(q: dict) -> Tuple[str, list]:
         where.append("c.eligibility LIKE %s")
         params.append(f"%{q['eligibility']}%")
 
+    # 최종 조립 
     where_clause = f"WHERE {' AND '.join(where)}" if where else ""
+    print("PARAMS:", params)
+    print("=" * 120)
     return where_clause, params
 
 

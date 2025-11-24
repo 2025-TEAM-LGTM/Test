@@ -77,27 +77,56 @@ def extract_keywords_from_star(s: str, t: str, a: str, r: str) -> PortfolioKeywo
    - 모호하거나 해당 없음 → 가장 가까운 ENUM 하나를 선택해라.
    - NULL/빈 문자열 금지 (DB에서 체크 제약 때문에 오류 남).
 
-2) T.role도 아래 ENUM 중 하나만 허용됨:
+2) S.problem_type은 리스트(List[str]) 형태로 작성해.
+   - 값이 하나라도 있으면 최소 1개 이상의 원소를 넣어라.
+   - 각 원소는 1줄짜리 문장.
+   - 예시: ["사용자들이 과제를 관리하기 어려워함", "수동으로 일정 정리를 해야 해서 비효율적이었음"]
+
+3) T.goal도 리스트(List[str]) 형태로 작성해.
+   - T 텍스트에서 프로젝트의 목표를 1~3개의 문장으로 요약해서 리스트에 넣어라.
+   - 예시: ["과제 일정을 자동으로 관리해 주는 웹서비스를 만드는 것이 목표였음"]
+
+4) T.role도 아래 ENUM 중 하나만 허용됨:
 {ALLOWED_ROLES}
 
    - 절대 new string 만들지 마라.
    - NULL 금지. 가장 가까운 ENUM 하나 선택.
 
-3) A.hard_skills는 반드시 아래 스택 이름 중에서만 선택:
+5) A.hard_skills는 반드시 아래 스택 이름 중에서만 선택:
 {ALLOWED_HARD_SKILLS}
 
    - 기술스택/언어/프레임워크/라이브러리/DB/DevOps 도구만 허용
    - "문제 해결", "협업", "소통", "최적화" 같은 추상적 표현 금지
    - 없는 기술 절대 넣지 마라.
 
-4) 나머지 text 필드는 자유롭게 작성 가능. 그러나, 추후 embedding을 실시할 것이기에 구체적인 수치나 분야보단 
-포괄적인 언어로 바꿀 것
+6) A.responsibility는 리스트(List[str])로 작성해.
+   - A 텍스트에서 실제로 수행한 작업을 구체적인 역할 단위로 쪼개서 넣어라.
+   - 예시: ["API 설계", "로그인 기능 구현", "DB 스키마 설계", "배포 자동화 파이프라인 구성"]
 
-5) 출력은 반드시 아래 JSON 스키마를 따를 것.
+7) A.deliverables는 리스트(List[str])로 작성해.
+   - A 텍스트에서 최종 산출물을 정리.
+   - 예시: ["웹서비스 배포", "admin 대시보드 구현", "사용자 매뉴얼 작성"]
+
+8) A.problem_solving은 리스트(List[str])로 작성해.
+   - 문제 상황과 그 해결방식을 한 문장씩 정리.
+   - 예시: ["S3 권한 오류를 디버깅하여 IAM 정책을 수정함", "응답 속도가 느려서 쿼리를 최적화함"]
+
+9) R.impact는 리스트(List[str])로 작성해.
+   - 결과와 성과를 나타내는 문장들.
+   - 예시: ["200명 이상의 사용자가 서비스를 이용함", "페이지 로딩 속도가 40% 개선됨", "서비스를 무중단 배포에 성공함"]
+
+10) R.growth는 리스트(List[str])로 작성해.
+    - 새롭게 배운 점, 성찰한 점, 성장한 점.
+    - 예시: ["실제 사용자 피드백을 통해 기능  조정하는 법을 배움", "배포 자동화를 통해 DevOps 기초를 익힘"]
+
+11) 출력은 반드시 아래 JSON 스키마를 따를 것.
    JSON 하나만 출력. 코드블록(```) 쓰지 말 것.
 
-6) - 언급되지 않은 값은 빈 리스트([]) 또는 null로 둬도 된다.
- 
+12) 각 리스트 필드는 무조건 최소 1개 이상의 요소를 포함해야 한다.
+    - STAR 텍스트에 직접적으로 언급되지 않더라도,
+    - 합리적 추론을 통해 해당 문맥에 맞는 값을 생성해라.
+    - 절대로 빈 리스트([])를 넣지 마라.
+
 스키마(JSON Schema):
 {json.dumps(schema, ensure_ascii=False, indent=2)}
 
@@ -110,7 +139,7 @@ def extract_keywords_from_star(s: str, t: str, a: str, r: str) -> PortfolioKeywo
             {"role": "system", "content": system_msg},
             {"role": "user", "content": user_msg},
         ],
-        temperature=0,
+        temperature=0.5,
     )
 
     content = resp.choices[0].message.content  # 문자열(JSON이어야 함)

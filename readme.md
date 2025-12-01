@@ -1,4 +1,22 @@
-# TEAM LGTM _ ai 기술 시연 
+# Team 30 LGTM _ 개요 
+|항목|내용|
+|---|---|
+|프로젝트명|대학생들을 위한 팀매칭 플랫폼|
+|프로젝트 키워드|팀매칭, 포트폴리오|
+|트랙|산학|
+|프로젝트멤버|임나은, 김재이, 서영|
+|팀지도교수|오세은 교수님|
+|무엇을 만들고자 하는가|공모전, 경진대회 등에 참여할 팀원을 구하는 팀매칭 플랫폼을 만든다. 포트폴리오를 통해 해당 사람의 주요 기술, 역할, 경험 등의 키워드를 추출한다. 그리고 사람들이 올린 공고를 DB에 저장하고 핵심 키워드를 추출한다. 이를 기반으로 챗봇을 통해 원하는 팀원과 공고을 쉽게 추천받을 수 있다. |
+|고객|공모전에 나가기 위해 팀원을 구하고 있는 대학생|
+|Pain Point|대부분의 공모전, 경진대회는 팀 단위로 참여해야 한다. 그러나 현재 나와 있는 대부분의 팀매칭 플랫폼은 사이드프로젝트 팀원 구인을 주 목적으로 하며, 유저의 대부분은 현직자이므로 대학생이 사용하기엔 한계가 있다. 대학생들이 팀에 필요한 역량을 갖춘 팀원을 구하는데 많은 어려움이 있다. |
+|사용할 소프트웨어 패키지의 명칭과 핵심기능/용도, 사용시나리오|1. 프론트 <br>React: 화면 UI를 구현한다.<br> 2. 백엔드 <br>Spring Boot, FASTAPI :  공고 글/포트폴리오 작성·수정·삭제·이미지 업로드 (CRUD) , 포트폴리오 선택 노출 및 블러 처리, 로그인/로그아웃 및 권한 관리 등을 구현한다.<br>3. AI<br> OpenAI: 팀원 추천기능, 공고추천기능을 수행하며 AI 챗봇을 통해 추천정보를 제공한다. <br> 4. 인프라/DB<br> PostgreSQL, pgvector, AWS S3: 사용자, 포트폴리오 정보들을 저장한다. AI와 연결하여 팀원 추천, 공고추천 기능을 제공한다.<br> AWS EC2, Redis, Docker: 서버를 연결하고 배포한다.|
+|사용할 소프트웨어 패키지의 명칭과 URL|1. 프론트 <br>React  <https://ko.legacy.reactjs.org/> <br>2. 백엔드<br>Spring Boot <https://spring.io/projects/spring-boot><br> FastAPI: <https://fastapi.tiangolo.com/> <br>3. AI <br> Chat GPT <https://openai.com/ko-KR/index/openai-api/><br> 4. 인프라/DB<br> PostgreSQL:<https://www.postgresql.org/> <br> pgvector : <https://github.com/pgvector/pgvector> <br> AWS EC2: <https://aws.amazon.com/ko/ec2/><br> AWS S3: <https://aws.amazon.com/ko/s3/> <br> Redis: <https://redis.io/> <br> Docker: <https://www.docker.com/>|
+|팀그라운드룰|<https://github.com/2025-TEAM-LGTM/LGTM-docs/blob/main/GroundRule.md>|
+|Project Repo URL|<https://github.com/2025-TEAM-LGTM>|
+| 최종 수정일 | 2025.12.01|
+
+
+# Ai 기술 시연 
 
 - contest : 공모전 팀 모집 글 검색 챗봇 - 팀장 입장에서 “어떤 공고를 찾고 싶은지”를 자연어로 입력하면, SQL 검색용 조건 JSON으로 구조화해서 DB에서 공고를 찾아주는 모듈
 - portfolio : 포트폴리오 키워드 추출 & 매칭 (사용자의 STAR 형식 포트폴리오에서 키워드를 추출해 DB에 저장하고, 자연어 질문과 매칭하는 모듈)
